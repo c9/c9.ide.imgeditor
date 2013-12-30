@@ -59,19 +59,20 @@ define(function(require, exports, module) {
             
             var BGCOLOR = "#3D3D3D";
             var img, canvas, activeDocument, rect, crop, zoom, info, rectinfo;
+            var editor;
             
             plugin.on("draw", function(e){
                 handle.draw();
                 
                 ui.insertMarkup(e.tab, require("text!./imgeditor.xml"), plugin);
                 
-                var editor = plugin.getElement("imgEditor");
                 var parent = plugin.getElement("parent");
                 var btn3   = plugin.getElement("btn3");
                 var btn4   = plugin.getElement("btn4");
                 var btn5   = plugin.getElement("btn5");
                 var btn6   = plugin.getElement("btn6");
                 
+                editor   = plugin.getElement("imgEditor");
                 crop     = plugin.getElement("btn2");
                 zoom     = plugin.getElement("zoom");
                 info     = plugin.getElement("info");
@@ -214,6 +215,7 @@ define(function(require, exports, module) {
                     img.onload = function(){
                         cnvs.width         = img.width;
                         cnvs.height        = img.height;
+                        cnvs.style.display = "inline-block";
                         img.style.display  = "none";
                         
                         ctx.drawImage(img, 0, 0);
@@ -239,6 +241,7 @@ define(function(require, exports, module) {
                     img.onload = function(){
                         cnvs.width         = img.width;
                         cnvs.height        = img.height;
+                        cnvs.style.display = "inline-block";
                         img.style.display  = "none";
                         
                         info.setAttribute("caption", 
@@ -251,13 +254,14 @@ define(function(require, exports, module) {
                 }
             }
             
-            function startRect(e, grabber, editor){
+            function startRect(e){
                 var container = rect.parentNode;
                 var pos       = container.getBoundingClientRect();
                 var cnvs      = canvas();
+                var htmlNode  = editor.$ext;
                 
-                var startX  = e.clientX;
-                var startY  = e.clientY;
+                var startX  = e.clientX + htmlNode.scrollLeft;
+                var startY  = e.clientY + htmlNode.scrollTop;
                 var moved;
                 
                 event.capture(container, function(e) {
@@ -269,22 +273,25 @@ define(function(require, exports, module) {
                         else return;
                     }
                     
-                    if (startX > e.clientX) {
-                        rect.style.left = (e.clientX - pos.left) + "px";
-                        rect.style.width  = (startX - e.clientX) + "px";
+                    var clientX = e.clientX + htmlNode.scrollLeft;
+                    var clientY = e.clientY + htmlNode.scrollTop;
+                    
+                    if (startX > clientX) {
+                        rect.style.left = (clientX - pos.left) + "px";
+                        rect.style.width  = (startX - clientX) + "px";
                     }
                     else {
                         rect.style.left = (startX - pos.left) + "px";
-                        rect.style.width  = (e.clientX - startX) + "px";
+                        rect.style.width  = (clientX - startX) + "px";
                     }
                     
-                    if (startY > e.clientY) {
-                        rect.style.top  = (e.clientY - pos.top) + "px";
-                        rect.style.height = (startY - e.clientY) + "px";
+                    if (startY > clientY) {
+                        rect.style.top  = (clientY - pos.top) + "px";
+                        rect.style.height = (startY - clientY) + "px";
                     }
                     else {
                         rect.style.top  = (startY - pos.top) + "px";
-                        rect.style.height = (e.clientY - startY) + "px";
+                        rect.style.height = (clientY - startY) + "px";
                     }
                     
                     var zoomLevel = zoom.value / 100;
@@ -364,6 +371,8 @@ define(function(require, exports, module) {
                 
                 doc.tab.backgroundColor = BGCOLOR;
                 doc.tab.className.add("dark");
+                
+                canvas().style.display = "none";
             });
             
             plugin.on("documentActivate", function(e){

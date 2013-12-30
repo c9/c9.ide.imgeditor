@@ -5,8 +5,8 @@
             <a:button skin="c9-toolbarbutton" id="btn2" disabled="true">Crop</a:button>
             <a:divider skin="c9-divider" />
             
-            <a:button skin="c9-toolbarbutton" id="btn3">Rotate 90&#176; Right</a:button>
             <a:button skin="c9-toolbarbutton" id="btn4">Rotate 90&#176; Left</a:button>
+            <a:button skin="c9-toolbarbutton" id="btn3">Rotate 90&#176; Right</a:button>
             <a:divider skin="c9-divider" />
             
             <a:button skin="c9-toolbarbutton" id="btn5">FlipH</a:button>
