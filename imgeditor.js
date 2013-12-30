@@ -187,7 +187,7 @@ define(function(require, exports, module) {
             
             /***** Method *****/
             
-            function setPath(path, doc){
+            function setPath(path, doc, callback){
                 if (!path) return;
                 
                 // Caption is the filename
@@ -201,10 +201,10 @@ define(function(require, exports, module) {
                     : vfs.url(path);
                     
                 // editor.setProperty("value", apf.escapeXML(fullpath));
-                loadCanvas(doc.tab, fullpath);
+                loadCanvas(doc.tab, fullpath, callback);
             }
             
-            function loadCanvas(tab, path){
+            function loadCanvas(tab, path, callback){
                 var idx  = tab.path;
                 var cnvs = canvas();
                 var ctx  = cnvs.getContext("2d");
@@ -225,6 +225,8 @@ define(function(require, exports, module) {
                             "W:" + img.width + "px, H:" + img.height + "px");
                         
                         tab.className.remove("connecting");
+                        
+                        callback && callback(loadedFiles[idx]);
                     };
                     img.onerror = function(){
                         tab.className.remove("connecting");
@@ -251,6 +253,8 @@ define(function(require, exports, module) {
                     };
                     
                     img.src = loadedFiles[idx];
+                    
+                    callback && callback(loadedFiles[idx]);
                 }
             }
             
@@ -359,6 +363,38 @@ define(function(require, exports, module) {
                     setPath(e.path, doc);
                 }, session);
                 
+                // Value Retrieval
+                // doc.on("getValue", function get(e){ 
+                //     return session.session
+                //         ? session.session.getValue()
+                //         : e.value;
+                // }, session);
+                
+                // Value setting
+                doc.on("setValue", function set(e){
+                    var path = doc.tab.path;
+                    
+                    // The first value that is set should clear the undo stack
+                    // additional times setting the value should keep it.
+                    if (doc.hasValue()) {
+                        var lastValue = loadedFiles[path];
+                        delete loadedFiles[path];
+                        
+                        // @todo this will go wrong and will be fixed when keeping canvas per session
+                        setPath(path, doc, function(newValue){
+                            doc.undoManager.add(new UndoItem(lastValue, canvas().toDataURL(), function(url){
+                                loadedFiles[path] = url;
+                                loadCanvas(doc.tab);
+                            }));
+                        });
+                    } 
+                    else {
+                        setPath(path, doc);
+                    }
+                    
+                    // doc.tab.className.remove("loading");
+                }, session);
+                
                 // Changed marker
                 function setChanged(e){
                     if (e.changed || doc.meta.newfile)
@@ -378,7 +414,7 @@ define(function(require, exports, module) {
             plugin.on("documentActivate", function(e){
                 var doc     = e.doc;
                 var session = doc.getSession();
-                var path    = doc.tab.path || doc.value;
+                var path    = doc.tab.path;
                 
                 activeDocument = doc;
                 
@@ -403,7 +439,7 @@ define(function(require, exports, module) {
             });
             
             plugin.on("documentUnload", function(e){
-                delete loadedFiles[e.doc.tab.path || e.doc.value];
+                delete loadedFiles[e.doc.tab.path];
             });
             
             /***** Register and define API *****/
@@ -450,7 +486,9 @@ define(function(require, exports, module) {
              * @property {"imgeditor"} type
              * @readonly
              */
-            plugin.freezePublicAPI({});
+            plugin.freezePublicAPI({
+                autoload: false
+            });
             
             plugin.load("imgeditor" + counter++);
             
