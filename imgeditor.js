@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "Editor", "editors", "ui", "save", "vfs", "layout"
+        "Editor", "editors", "ui", "save", "vfs", "layout", "watcher"
     ];
     main.provides = ["imgeditor"];
     return main;
@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         var vfs      = imports.vfs;
         var save     = imports.save;
         var layout   = imports.layout;
+        var watcher  = imports.watcher;
         var Editor   = imports.Editor;
         var editors  = imports.editors;
         
@@ -144,6 +145,8 @@ define(function(require, exports, module) {
                 function saveCanvas(path, value, callback){
                     var dataURL = loadedFiles[path];
                     var binary  = atob(dataURL.split(',')[1]);
+                    
+                    watcher.ignore(path);
                     
                     vfs.rest(path, {
                         method : "PUT", 
