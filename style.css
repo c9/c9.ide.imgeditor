@@ -1,0 +1,41 @@
+.imgtoolbar{
+    padding-top:3px;
+    border-bottom: 1px solid black;
+    box-shadow: 0 1px rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    z-index: 1000000;
+}
+
+.imgeditor{
+    background: rgb(71, 71, 71);
+    text-align : center;
+    white-space: nowrap;
+    overflow: auto;
+}
+.imgeditor:after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.imgeditor canvas{
+    background: url("@{image-path}/background.png");
+    cursor: crosshair;
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    display: inline-block;
+    vertical-align: middle;
+    -moz-transform: scale(1);
+    -moz-transform-origin: 0 0;
+    -webkit-transform: scale(1);
+    -webkit-transform-origin: 0 0;
+}
+
+.imgeditorrect{
+    cursor: crosshair;
+    border : 1px dotted rgba(0,0,0,0.5);
+    /*box-shadow : 1px 1px rgba(255,255,255,0.7), 1px 1px rgba(255,255,255,0.7) inset;*/
+    background : rgba(255,255,255,0.2);
+    position : absolute;
+    z-index : 100000;
+}
