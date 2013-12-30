@@ -147,7 +147,7 @@ define(function(require, exports, module) {
                     var blob    = dataUriToBlob(dataURL); // atob(dataURL.split(',')[1]);
                     
                     // Alert watcher we are saving
-                    watcher.ignore(path, 1000);
+                    watcher.ignore(path, 60000);
                     
                     // Save
                     vfs.rest(path, {
@@ -155,6 +155,8 @@ define(function(require, exports, module) {
                         body   : blob
                     }, function(err, data, res) {
                         callback(err, data);
+                        
+                        watcher.ignore(path);
                     });
                 }
                 
