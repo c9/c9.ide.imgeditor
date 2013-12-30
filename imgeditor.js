@@ -144,16 +144,42 @@ define(function(require, exports, module) {
                 
                 function saveCanvas(path, value, callback){
                     var dataURL = loadedFiles[path];
-                    var binary  = atob(dataURL.split(',')[1]);
+                    var blob    = dataUriToBlob(dataURL); // atob(dataURL.split(',')[1]);
                     
+                    // Alert watcher we are saving
                     watcher.ignore(path);
                     
+                    // Save
                     vfs.rest(path, {
                         method : "PUT", 
-                        body   : binary
+                        body   : blob
                     }, function(err, data, res) {
                         callback(err, data);
                     });
+                }
+                
+                function dataUriToBlob(dataURI) {
+                    // serialize the base64/URLEncoded data
+                    var byteString;
+                    if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+                        byteString = atob(dataURI.split(',')[1]);
+                    }
+                    else {
+                        byteString = unescape(dataURI.split(',')[1]);
+                    }
+            
+                    // parse the mime type
+                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+            
+                    // construct a Blob of the image data
+                    var array = [];
+                    for(var i = 0; i < byteString.length; i++) {
+                        array.push(byteString.charCodeAt(i));
+                    }
+                    return new Blob(
+                        [new Uint8Array(array)],
+                        {type: mimeString}
+                    );
                 }
                 
                 save.on("beforeSave", function(e) {
