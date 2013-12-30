@@ -188,6 +188,10 @@ define(function(require, exports, module) {
                     if (e.document.editor.type == "imgeditor"){
                         var path = e.document.tab.path;
                         
+                        // Prevent unchanged files from being saved
+                        if (!e.document.changed)
+                            return false;
+                        
                         if (e.document == activeDocument)
                             loadedFiles[path] = canvas().toDataURL();
                             
