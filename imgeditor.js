@@ -267,13 +267,14 @@ define(function(require, exports, module) {
                         callback && callback(loadedFiles[idx]);
                     };
                     img.onerror = function(){
+                        img.onerror = img.onload = null;
                         tab.className.remove("connecting");
                         tab.className.add("error");
                         
-                        img.src = options.staticPrefix + "/sorry.jpg";
+                        img.src = options.staticPrefix + "/images/sorry.jpg";
                         
                         layout.showError("Invalid or Unsupported Image Format");
-                    }
+                    };
                     
                     img.src = path;
                 }
