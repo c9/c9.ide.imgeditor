@@ -244,6 +244,9 @@ define(function(require, exports, module) {
                 var cnvs = canvas();
                 var ctx  = cnvs.getContext("2d");
                 
+                // Enable CORS support
+                img.crossOrigin = "Anonymous";
+                
                 if (path && !loadedFiles[idx]){
                     tab.className.add("connecting");
                     
