@@ -1,18 +1,18 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "Editor", "editors", "ui", "save", "vfs", "layout", "watcher"
+        "Editor", "editors", "ui", "save", "vfs", "dialog.error", "watcher"
     ];
     main.provides = ["imgeditor"];
     return main;
 
     function main(options, imports, register) {
-        var ui       = imports.ui;
-        var vfs      = imports.vfs;
-        var save     = imports.save;
-        var layout   = imports.layout;
-        var watcher  = imports.watcher;
-        var Editor   = imports.Editor;
-        var editors  = imports.editors;
+        var ui        = imports.ui;
+        var vfs       = imports.vfs;
+        var save      = imports.save;
+        var watcher   = imports.watcher;
+        var Editor    = imports.Editor;
+        var editors   = imports.editors;
+        var showError = imports["dialog.error"].show;
         
         var event    = require("ace/lib/event");
         var Pixastic = require("./lib_pixastic");
@@ -171,7 +171,7 @@ define(function(require, exports, module) {
                     }
             
                     // parse the mime type
-                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
             
                     // construct a Blob of the image data
                     var array = [];
@@ -273,9 +273,9 @@ define(function(require, exports, module) {
                         
                         img.src = options.staticPrefix + "/images/sorry.jpg";
                         
-                        layout.showError("Invalid or Unsupported Image Format");
+                        showError("Invalid or Unsupported Image Format");
                     };
-                    
+
                     img.src = path;
                 }
                 else {
@@ -351,7 +351,7 @@ define(function(require, exports, module) {
                             top    : rect.style.top,
                             width  : rect.style.width,
                             height : rect.style.height,
-                        }
+                        };
                         crop.enable();
                     }
                     else {
@@ -374,7 +374,7 @@ define(function(require, exports, module) {
                         top    : (rect.offsetTop - cnvs.offsetTop) / zoomLevel,
                         width  : (rect.offsetWidth) / zoomLevel,
                         height : (rect.offsetHeight) / zoomLevel
-                    }
+                    };
                 }
                 
                 Pixastic.process(cnvs, action, options);
