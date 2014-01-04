@@ -1,13 +1,18 @@
 .imgtoolbar{
     padding-top:3px;
-    border-bottom: 1px solid black;
-    box-shadow: 0 1px rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid @imgeditor-toolbar-border-color;
+    box-shadow: @imgeditor-toolbar-shadow;
     box-sizing: border-box;
     z-index: 1000000;
+    background-color : @imgeditor-toolbar-background;
+}
+
+.imgtoolbar .label{
+    color: @imgeditor-toolbar-label-color;
 }
 
 .imgeditor{
-    background: rgb(71, 71, 71);
+    background: @imgeditor-background;
     text-align : center;
     white-space: nowrap;
     overflow: auto;

@@ -1,16 +1,16 @@
 <a:application xmlns:a="http://ajax.org/2005/aml">
     <a:vsplitbox id="parent" anchors="0 0 0 0">
         <a:bar class="imgtoolbar fakehbox aligncenter padding3" id="barTools" height="30">
-            <!--<a:button skin="c9-toolbarbutton" id="btn1">Resize</a:button>-->
-            <a:button skin="c9-toolbarbutton" id="btn2" disabled="true">Crop</a:button>
+            <!--<a:button skin="c9-toolbarbutton-glossy" id="btn1">Resize</a:button>-->
+            <a:button skin="c9-toolbarbutton-glossy" id="btn2" disabled="true">Crop</a:button>
             <a:divider skin="c9-divider" />
             
-            <a:button skin="c9-toolbarbutton" id="btn4">Rotate 90&#176; Left</a:button>
-            <a:button skin="c9-toolbarbutton" id="btn3">Rotate 90&#176; Right</a:button>
+            <a:button skin="c9-toolbarbutton-glossy" id="btn4">Rotate 90&#176; Left</a:button>
+            <a:button skin="c9-toolbarbutton-glossy" id="btn3">Rotate 90&#176; Right</a:button>
             <a:divider skin="c9-divider" />
             
-            <a:button skin="c9-toolbarbutton" id="btn5">FlipH</a:button>
-            <a:button skin="c9-toolbarbutton" id="btn6">FlipV</a:button>
+            <a:button skin="c9-toolbarbutton-glossy" id="btn5">FlipH</a:button>
+            <a:button skin="c9-toolbarbutton-glossy" id="btn6">FlipV</a:button>
             <a:divider skin="c9-divider" />
             
             <a:dropdown skin="black_dropdown" id="zoom" value="100%" width="70" maxitems="7">

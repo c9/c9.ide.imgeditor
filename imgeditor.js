@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "Editor", "editors", "ui", "save", "vfs", "layout", "watcher"
+        "Editor", "editors", "ui", "save", "vfs", "layout", "watcher", 
+        "settings"
     ];
     main.provides = ["imgeditor"];
     return main;
@@ -13,6 +14,7 @@ define(function(require, exports, module) {
         var watcher  = imports.watcher;
         var Editor   = imports.Editor;
         var editors  = imports.editors;
+        var settings = imports.settings;
         
         var event    = require("ace/lib/event");
         var Pixastic = require("./lib_pixastic");
@@ -58,7 +60,7 @@ define(function(require, exports, module) {
         function ImageEditor(){
             var plugin = new Editor("Ajax.org", main.consumes, extensions);
             
-            var BGCOLOR = "#3D3D3D";
+            var BGCOLOR = { light: "#D3D3D3", dark: "#3D3D3D" };
             var img, canvas, activeDocument, rect, crop, zoom, info, rectinfo;
             var editor;
             
@@ -78,9 +80,6 @@ define(function(require, exports, module) {
                 zoom     = plugin.getElement("zoom");
                 info     = plugin.getElement("info");
                 rectinfo = plugin.getElement("rectinfo");
-                
-                // Background color
-                parent.$ext.style.backgroundColor = BGCOLOR;
                 
                 // Rectangle
                 rect = document.createElement("div");
@@ -444,8 +443,18 @@ define(function(require, exports, module) {
                 doc.on("changed", setChanged, session);
                 setChanged({ changed: doc.changed });
                 
-                doc.tab.backgroundColor = BGCOLOR;
-                doc.tab.className.add("dark");
+                function setTheme(e){
+                    var tab    = doc.tab;
+                    var isDark = e.theme == "dark";
+                    
+                    tab.backgroundColor = BGCOLOR[e.theme];
+                    
+                    if (isDark) tab.className.add("dark");
+                    else tab.className.remove("dark");
+                }
+                
+                layout.on("themeChange", setTheme, doc);
+                setTheme({ theme: settings.get("user/general/@skin") || "dark" });
                 
                 canvas().style.display = "none";
             });
