@@ -1,13 +1,14 @@
 define(function(require, exports, module) {
     main.consumes = [
         "Editor", "editors", "ui", "save", "vfs", "layout", "watcher", 
-        "settings", "dialog.error"
+        "settings", "dialog.error", "c9"
     ];
     main.provides = ["imgeditor"];
     return main;
 
     function main(options, imports, register) {
         var ui       = imports.ui;
+        var c9       = imports.c9;
         var vfs      = imports.vfs;
         var save     = imports.save;
         var layout   = imports.layout;
@@ -245,7 +246,8 @@ define(function(require, exports, module) {
                 var ctx  = cnvs.getContext("2d");
                 
                 // Enable CORS support
-                // img.crossOrigin = "Anonymous";
+                if (c9.hosted)
+                    img.crossOrigin = "Anonymous";
                 
                 if (path && !loadedFiles[idx]){
                     tab.className.add("connecting");
