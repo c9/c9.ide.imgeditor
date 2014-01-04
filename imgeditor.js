@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
         "Editor", "editors", "ui", "save", "vfs", "layout", "watcher", 
-        "settings"
+        "settings", "dialog.error"
     ];
     main.provides = ["imgeditor"];
     return main;
@@ -15,6 +15,7 @@ define(function(require, exports, module) {
         var Editor   = imports.Editor;
         var editors  = imports.editors;
         var settings = imports.settings;
+        var showError = imports["dialog.error"].show;
         
         var event    = require("ace/lib/event");
         var Pixastic = require("./lib_pixastic");
@@ -170,7 +171,7 @@ define(function(require, exports, module) {
                     }
             
                     // parse the mime type
-                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+                    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
             
                     // construct a Blob of the image data
                     var array = [];
@@ -272,9 +273,9 @@ define(function(require, exports, module) {
                         
                         img.src = options.staticPrefix + "/images/sorry.jpg";
                         
-                        layout.showError("Invalid or Unsupported Image Format");
+                        showError("Invalid or Unsupported Image Format");
                     };
-                    
+
                     img.src = path;
                 }
                 else {
@@ -350,7 +351,7 @@ define(function(require, exports, module) {
                             top    : rect.style.top,
                             width  : rect.style.width,
                             height : rect.style.height,
-                        }
+                        };
                         crop.enable();
                     }
                     else {
@@ -373,7 +374,7 @@ define(function(require, exports, module) {
                         top    : (rect.offsetTop - cnvs.offsetTop) / zoomLevel,
                         width  : (rect.offsetWidth) / zoomLevel,
                         height : (rect.offsetHeight) / zoomLevel
-                    }
+                    };
                 }
                 
                 Pixastic.process(cnvs, action, options);
