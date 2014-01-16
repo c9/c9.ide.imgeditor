@@ -281,19 +281,20 @@ define(function(require, exports, module) {
                     img.src = path;
                 }
                 else {
-                    img.onload = function(){
-                        cnvs.width         = img.width;
-                        cnvs.height        = img.height;
+                    var tempImg = new Image();
+                    tempImg.onload = function(){
+                        cnvs.width         = tempImg.width;
+                        cnvs.height        = tempImg.height;
                         cnvs.style.display = "inline-block";
-                        img.style.display  = "none";
                         
                         info.setAttribute("caption", 
-                            "W:" + img.width + "px, H:" + img.height + "px");
+                            "W:" + tempImg.width + "px, " +
+                            "H:" + tempImg.height + "px");
                         
-                        ctx.drawImage(img, 0, 0);
+                        ctx.drawImage(tempImg, 0, 0);
                     };
                     
-                    img.src = loadedFiles[idx];
+                    tempImg.src = loadedFiles[idx];
                     
                     callback && callback(loadedFiles[idx]);
                 }
