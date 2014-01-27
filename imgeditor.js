@@ -519,7 +519,7 @@ define(function(require, exports, module) {
              * @singleton
              */
             /**
-             * Read Only Image Viewer for Cloud9 IDE
+             * Read Only Image Viewer for Cloud9
              * 
              * Example of instantiating a new terminal:
              * 
