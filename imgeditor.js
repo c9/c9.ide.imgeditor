@@ -190,11 +190,11 @@ define(function(require, exports, module) {
                         var path = e.document.tab.path;
                         
                         // Prevent unchanged files from being saved
-                        if (!e.document.changed)
+                        if (!e.document.changed && path == e.path)
                             return false;
                         
                         if (e.document == activeDocument)
-                            loadedFiles[path] = canvas().toDataURL();
+                            loadedFiles[e.path] = canvas().toDataURL();
                             
                         return saveCanvas;
                     }
