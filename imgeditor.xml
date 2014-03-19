@@ -1,7 +1,7 @@
 <a:application xmlns:a="http://ajax.org/2005/aml">
     <a:vsplitbox id="parent" anchors="0 0 0 0">
         <a:bar class="imgtoolbar fakehbox aligncenter padding3" id="barTools" height="30">
-            <!--<a:button skin="c9-toolbarbutton-glossy" id="btn1">Resize</a:button>-->
+            <a:button skin="c9-toolbarbutton-glossy" id="btn1">Resize</a:button>
             <a:button skin="c9-toolbarbutton-glossy" id="btn2" disabled="true">Crop</a:button>
             <a:divider skin="c9-divider" />
             

@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
         "Editor", "editors", "ui", "save", "vfs", "layout", "watcher", 
-        "settings", "dialog.error", "c9"
+        "settings", "dialog.error", "c9", "Form"
     ];
     main.provides = ["imgeditor"];
     return main;
@@ -14,6 +14,7 @@ define(function(require, exports, module) {
         var layout   = imports.layout;
         var watcher  = imports.watcher;
         var Editor   = imports.Editor;
+        var Form     = imports.Form;
         var editors  = imports.editors;
         var settings = imports.settings;
         var showError = imports["dialog.error"].show;
@@ -72,6 +73,7 @@ define(function(require, exports, module) {
                 ui.insertMarkup(e.tab, require("text!./imgeditor.xml"), plugin);
                 
                 var parent = plugin.getElement("parent");
+                var btn1   = plugin.getElement("btn1");
                 var btn3   = plugin.getElement("btn3");
                 var btn4   = plugin.getElement("btn4");
                 var btn5   = plugin.getElement("btn5");
@@ -92,6 +94,85 @@ define(function(require, exports, module) {
                 canvas = function(){
                     return editor.$ext.querySelector("canvas");
                 }
+                
+                // Resize
+                var mnuResize = new ui.menu({ 
+                    width  : 155, 
+                    height : 130, 
+                    style  : "padding:10px 10px 0 10px",
+                    childNodes : [
+                        new ui.hsplitbox({
+                            height     : 27,
+                            childNodes : [
+                                new ui.label({ width: 50, caption: "Width:" }),
+                                new ui.spinner({ width: 50, min: 0, max: 10000, id: "width" })
+                            ]
+                        }),
+                        new ui.hsplitbox({
+                            height     : 27,
+                            childNodes : [
+                                new ui.label({ width: 50, caption: "Height:" }),
+                                new ui.spinner({ width: 50, min: 0, max: 10000, id: "height"  })
+                            ]
+                        }),
+                        new ui.hsplitbox({
+                            height     : 27,
+                            childNodes : [
+                                new ui.checkbox({
+                                    value : true,
+                                    label : "Maintain Aspect Ratio",
+                                    skin  : "checkbox_black",
+                                    id    : "aspectratio"
+                                })
+                            ]
+                        }),
+                        new ui.hsplitbox({
+                            height     : 27,
+                            childNodes : [
+                                new ui.button({
+                                    skin      : "btn-default-css3",
+                                    margin    : "2 10 0 10",
+                                    caption   : "Resize",
+                                    "default" : "1",
+                                    onclick   : function(){
+                                        if (tbHeight.getValue() > 1 && tbWidth.getValue() > 1) {
+                                            exec("resize", {
+                                                width: tbWidth.getValue(),
+                                                height: tbHeight.getValue()
+                                            });
+                                        }
+                                    }
+                                })
+                            ]
+                        })
+                    ]
+                });
+                btn1.setAttribute("submenu", mnuResize);
+                plugin.addElement(mnuResize);
+                
+                var tbWidth  = plugin.getElement("width");
+                var tbHeight = plugin.getElement("height");
+                var cbAspect = plugin.getElement("aspectratio");
+                
+                tbWidth.on("blur", function(){
+                    if (cbAspect.checked) {
+                        tbHeight.setAttribute("value", Math.round(canvas().offsetHeight 
+                            * (tbWidth.getValue() / canvas().offsetWidth)));
+                    }
+                });
+                tbHeight.on("blur", function(){
+                    if (cbAspect.checked) {
+                        tbWidth.setAttribute("value", Math.round(canvas().offsetWidth 
+                            * (tbHeight.getValue() / canvas().offsetHeight)));
+                    }
+                });
+                
+                mnuResize.on("prop.visible", function(e){
+                    if (!e.value) return;
+                    
+                    tbWidth.setValue(canvas().offsetWidth);
+                    tbHeight.setValue(canvas().offsetHeight);
+                });
                 
                 // Zoom
                 zoom.on("afterchange", function(){
