@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
         "Editor", "editors", "ui", "save", "vfs", "layout", "watcher", 
-        "settings", "dialog.error", "c9", "Form"
+        "settings", "dialog.error", "c9"
     ];
     main.provides = ["imgeditor"];
     return main;
@@ -14,7 +14,6 @@ define(function(require, exports, module) {
         var layout   = imports.layout;
         var watcher  = imports.watcher;
         var Editor   = imports.Editor;
-        var Form     = imports.Form;
         var editors  = imports.editors;
         var settings = imports.settings;
         var showError = imports["dialog.error"].show;
