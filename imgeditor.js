@@ -341,8 +341,11 @@ define(function(require, exports, module) {
                         ctx.drawImage(img, 0, 0);
                         loadedFiles[idx] = cnvs.toDataURL();
                         
-                        info.setAttribute("caption", 
-                            "W:" + img.width + "px, H:" + img.height + "px");
+                        // Timeout because width is not processed completely yet
+                        setTimeout(function(){
+                            info.setAttribute("caption", 
+                                "W:" + img.width + "px, H:" + img.height + "px");
+                        }, 10);
                         
                         tab.className.remove("connecting");
                         
@@ -462,6 +465,11 @@ define(function(require, exports, module) {
                 
                 Pixastic.process(cnvs, action, options);
                 clearRect();
+                
+                cnvs = canvas();
+                info.setAttribute("caption", 
+                    "W:" + cnvs.offsetWidth + "px, " +
+                    "H:" + cnvs.offsetHeight + "px");
                 
                 //@todo
                 var doc = activeDocument;
