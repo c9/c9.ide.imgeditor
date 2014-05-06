@@ -7,21 +7,21 @@ define(function(require, exports, module) {
     return main;
 
     function main(options, imports, register) {
-        var ui       = imports.ui;
-        var c9       = imports.c9;
-        var vfs      = imports.vfs;
-        var save     = imports.save;
-        var layout   = imports.layout;
-        var watcher  = imports.watcher;
-        var Editor   = imports.Editor;
-        var editors  = imports.editors;
+        var ui = imports.ui;
+        var c9 = imports.c9;
+        var vfs = imports.vfs;
+        var save = imports.save;
+        var layout = imports.layout;
+        var watcher = imports.watcher;
+        var Editor = imports.Editor;
+        var editors = imports.editors;
         var settings = imports.settings;
         var showError = imports["dialog.error"].show;
         
-        var event    = require("ace/lib/event");
+        var event = require("ace/lib/event");
         var Pixastic = require("./lib_pixastic");
         
-        var counter     = 0;
+        var counter = 0;
         var loadedFiles = {};
         
         /***** Initialization *****/
@@ -46,7 +46,7 @@ define(function(require, exports, module) {
         // @todo getState/setState
         // @todo keep canvas reference on session and remove loadedFiles
         // @Todo for later - add undo stack
-        function UndoItem(original, changed, apply){
+        function UndoItem(original, changed, apply) {
             this.getState = function(){ }
             this.undo = function(){ 
                 apply(original);
@@ -55,7 +55,7 @@ define(function(require, exports, module) {
                 apply(changed);
             }
         }
-        // undoManager.on("itemFind", function(e){
+        // undoManager.on("itemFind", function(e) {
         //     return new Item(e.state[0], e.state[1]);
         // });
         
@@ -66,22 +66,22 @@ define(function(require, exports, module) {
             var img, canvas, activeDocument, rect, crop, zoom, info, rectinfo;
             var editor;
             
-            plugin.on("draw", function(e){
+            plugin.on("draw", function(e) {
                 handle.draw();
                 
                 ui.insertMarkup(e.tab, require("text!./imgeditor.xml"), plugin);
                 
                 var parent = plugin.getElement("parent");
-                var btn1   = plugin.getElement("btn1");
-                var btn3   = plugin.getElement("btn3");
-                var btn4   = plugin.getElement("btn4");
-                var btn5   = plugin.getElement("btn5");
-                var btn6   = plugin.getElement("btn6");
+                var btn1 = plugin.getElement("btn1");
+                var btn3 = plugin.getElement("btn3");
+                var btn4 = plugin.getElement("btn4");
+                var btn5 = plugin.getElement("btn5");
+                var btn6 = plugin.getElement("btn6");
                 
-                editor   = plugin.getElement("imgEditor");
-                crop     = plugin.getElement("btn2");
-                zoom     = plugin.getElement("zoom");
-                info     = plugin.getElement("info");
+                editor = plugin.getElement("imgEditor");
+                crop = plugin.getElement("btn2");
+                zoom = plugin.getElement("zoom");
+                info = plugin.getElement("info");
                 rectinfo = plugin.getElement("rectinfo");
                 
                 // Rectangle
@@ -89,51 +89,51 @@ define(function(require, exports, module) {
                 editor.$ext.appendChild(rect);
                 rect.className = "imgeditorrect";
                 
-                img    = editor.$ext.querySelector("img");
+                img = editor.$ext.querySelector("img");
                 canvas = function(){
                     return editor.$ext.querySelector("canvas");
                 }
                 
                 // Resize
                 var mnuResize = new ui.menu({ 
-                    width  : 155, 
-                    height : 130, 
-                    style  : "padding:10px 10px 0 10px",
-                    childNodes : [
+                    width: 155, 
+                    height: 130, 
+                    style: "padding:10px 10px 0 10px",
+                    childNodes: [
                         new ui.hsplitbox({
-                            height     : 27,
-                            childNodes : [
+                            height: 27,
+                            childNodes: [
                                 new ui.label({ width: 50, caption: "Width:" }),
                                 new ui.spinner({ width: 50, min: 0, max: 10000, id: "width" })
                             ]
                         }),
                         new ui.hsplitbox({
-                            height     : 27,
-                            childNodes : [
+                            height: 27,
+                            childNodes: [
                                 new ui.label({ width: 50, caption: "Height:" }),
                                 new ui.spinner({ width: 50, min: 0, max: 10000, id: "height"  })
                             ]
                         }),
                         new ui.hsplitbox({
-                            height     : 27,
-                            childNodes : [
+                            height: 27,
+                            childNodes: [
                                 new ui.checkbox({
-                                    value : true,
-                                    label : "Maintain Aspect Ratio",
-                                    skin  : "checkbox_black",
-                                    id    : "aspectratio"
+                                    value: true,
+                                    label: "Maintain Aspect Ratio",
+                                    skin: "checkbox_black",
+                                    id: "aspectratio"
                                 })
                             ]
                         }),
                         new ui.hsplitbox({
-                            height     : 27,
-                            childNodes : [
+                            height: 27,
+                            childNodes: [
                                 new ui.button({
-                                    skin      : "btn-default-css3",
-                                    margin    : "2 10 0 10",
-                                    caption   : "Resize",
+                                    skin: "btn-default-css3",
+                                    margin: "2 10 0 10",
+                                    caption: "Resize",
                                     "default" : "1",
-                                    onclick   : function(){
+                                    onclick: function(){
                                         if (tbHeight.getValue() > 1 && tbWidth.getValue() > 1) {
                                             exec("resize", {
                                                 width: tbWidth.getValue(),
@@ -149,7 +149,7 @@ define(function(require, exports, module) {
                 btn1.setAttribute("submenu", mnuResize);
                 plugin.addElement(mnuResize);
                 
-                var tbWidth  = plugin.getElement("width");
+                var tbWidth = plugin.getElement("width");
                 var tbHeight = plugin.getElement("height");
                 var cbAspect = plugin.getElement("aspectratio");
                 
@@ -166,7 +166,7 @@ define(function(require, exports, module) {
                     }
                 });
                 
-                mnuResize.on("prop.visible", function(e){
+                mnuResize.on("prop.visible", function(e) {
                     if (!e.value) return;
                     
                     tbWidth.setValue(canvas().offsetWidth);
@@ -192,14 +192,14 @@ define(function(require, exports, module) {
                 btn5.on("click", function(){ exec("fliph"); });
                 btn6.on("click", function(){ exec("flipv"); });
                 
-                editor.$ext.onmousemove = function(e){
+                editor.$ext.onmousemove = function(e) {
                     if (rect.style.display != "none")
                         return;
                     
-                    var cnvs  = canvas();
-                    var pos   = cnvs.getBoundingClientRect();
-                    var left  = e.clientX - pos.left;
-                    var top   = e.clientY - pos.top;
+                    var cnvs = canvas();
+                    var pos = cnvs.getBoundingClientRect();
+                    var left = e.clientX - pos.left;
+                    var top = e.clientY - pos.top;
                     
                     var zoomLevel = zoom.value / 100;
                     if (left < 0 || top < 0 
@@ -211,11 +211,11 @@ define(function(require, exports, module) {
                         + "T: " + (top / zoomLevel) + "px");
                 }
                 
-                editor.$ext.onmousedown = function(e){
-                    var cnvs  = canvas();
-                    var pos   = cnvs.getBoundingClientRect();
-                    var left  = e.clientX - pos.left;
-                    var top   = e.clientY - pos.top;
+                editor.$ext.onmousedown = function(e) {
+                    var cnvs = canvas();
+                    var pos = cnvs.getBoundingClientRect();
+                    var left = e.clientX - pos.left;
+                    var top = e.clientY - pos.top;
                     if (left < 0 || top < 0 
                       || left > pos.width || top > pos.height)
                         return;
@@ -223,17 +223,17 @@ define(function(require, exports, module) {
                     startRect(e);
                 };
                 
-                function saveCanvas(path, value, callback){
+                function saveCanvas(path, value, callback) {
                     var dataURL = loadedFiles[path];
-                    var blob    = dataUriToBlob(dataURL); // atob(dataURL.split(',')[1]);
+                    var blob = dataUriToBlob(dataURL); // atob(dataURL.split(',')[1]);
                     
                     // Alert watcher we are saving
                     watcher.ignore(path, 60000);
                     
                     // Save
                     vfs.rest(path, {
-                        method : "PUT", 
-                        body   : blob
+                        method: "PUT", 
+                        body: blob
                     }, function(err, data, res) {
                         callback(err, data);
                         
@@ -256,7 +256,7 @@ define(function(require, exports, module) {
             
                     // construct a Blob of the image data
                     var array = [];
-                    for(var i = 0; i < byteString.length; i++) {
+                    for (var i = 0; i < byteString.length; i++) {
                         array.push(byteString.charCodeAt(i));
                     }
                     return new Blob(
@@ -288,7 +288,7 @@ define(function(require, exports, module) {
                 //         return;
                     
                 //     var newPath = e.doc && e.doc.getNode && e.doc.getNode().getAttribute("path");
-                //     if (editor.value == e.oldpath && newPath !== e.oldpath){
+                //     if (editor.value == e.oldpath && newPath !== e.oldpath) {
                 //         var dataURL = _canvas.toDataURL();
                 //         saveCanvas(newPath,dataURL);
                 //         return false;
@@ -303,7 +303,7 @@ define(function(require, exports, module) {
             
             /***** Method *****/
             
-            function setPath(path, doc, callback){
+            function setPath(path, doc, callback) {
                 if (!path) return;
                 
                 // Caption is the filename
@@ -320,10 +320,10 @@ define(function(require, exports, module) {
                 loadCanvas(doc.tab, fullpath, callback);
             }
             
-            function loadCanvas(tab, path, callback){
-                var idx  = tab.path;
+            function loadCanvas(tab, path, callback) {
+                var idx = tab.path;
                 var cnvs = canvas();
-                var ctx  = cnvs.getContext("2d");
+                var ctx = cnvs.getContext("2d");
                 
                 // Enable CORS support
                 if (c9.hosted)
@@ -333,10 +333,10 @@ define(function(require, exports, module) {
                     tab.className.add("connecting");
                     
                     img.onload = function(){
-                        cnvs.width         = img.width;
-                        cnvs.height        = img.height;
+                        cnvs.width = img.width;
+                        cnvs.height = img.height;
                         cnvs.style.display = "inline-block";
-                        img.style.display  = "none";
+                        img.style.display = "none";
                         
                         ctx.drawImage(img, 0, 0);
                         loadedFiles[idx] = cnvs.toDataURL();
@@ -366,8 +366,8 @@ define(function(require, exports, module) {
                 else {
                     var tempImg = new Image();
                     tempImg.onload = function(){
-                        cnvs.width         = tempImg.width;
-                        cnvs.height        = tempImg.height;
+                        cnvs.width = tempImg.width;
+                        cnvs.height = tempImg.height;
                         cnvs.style.display = "inline-block";
                         
                         info.setAttribute("caption", 
@@ -383,14 +383,14 @@ define(function(require, exports, module) {
                 }
             }
             
-            function startRect(e){
+            function startRect(e) {
                 var container = rect.parentNode;
-                var pos       = container.getBoundingClientRect();
-                var cnvs      = canvas();
-                var htmlNode  = editor.$ext;
+                var pos = container.getBoundingClientRect();
+                var cnvs = canvas();
+                var htmlNode = editor.$ext;
                 
-                var startX  = e.clientX + htmlNode.scrollLeft;
-                var startY  = e.clientY + htmlNode.scrollTop;
+                var startX = e.clientX + htmlNode.scrollLeft;
+                var startY = e.clientY + htmlNode.scrollTop;
                 var moved;
                 
                 event.capture(container, function(e) {
@@ -407,19 +407,19 @@ define(function(require, exports, module) {
                     
                     if (startX > clientX) {
                         rect.style.left = (clientX - pos.left) + "px";
-                        rect.style.width  = (startX - clientX) + "px";
+                        rect.style.width = (startX - clientX) + "px";
                     }
                     else {
                         rect.style.left = (startX - pos.left) + "px";
-                        rect.style.width  = (clientX - startX) + "px";
+                        rect.style.width = (clientX - startX) + "px";
                     }
                     
                     if (startY > clientY) {
-                        rect.style.top  = (clientY - pos.top) + "px";
+                        rect.style.top = (clientY - pos.top) + "px";
                         rect.style.height = (startY - clientY) + "px";
                     }
                     else {
-                        rect.style.top  = (startY - pos.top) + "px";
+                        rect.style.top = (startY - pos.top) + "px";
                         rect.style.height = (clientY - startY) + "px";
                     }
                     
@@ -433,10 +433,10 @@ define(function(require, exports, module) {
                 }, function() {
                     if (moved) {
                         activeDocument.getSession().rect = {
-                            left   : rect.style.left,
-                            top    : rect.style.top,
-                            width  : rect.style.width,
-                            height : rect.style.height,
+                            left: rect.style.left,
+                            top: rect.style.top,
+                            width: rect.style.width,
+                            height: rect.style.height,
                         };
                         crop.enable();
                     }
@@ -448,18 +448,18 @@ define(function(require, exports, module) {
                 event.stopEvent(e);
             }
             
-            function exec(action, options){
+            function exec(action, options) {
                 var cnvs = canvas();
-                var url  = cnvs.toDataURL();
+                var url = cnvs.toDataURL();
                 
                 if (action == "crop") {
                     var zoomLevel = zoom.value / 100;
                     
                     options = {
-                        left   : (rect.offsetLeft - cnvs.offsetLeft) / zoomLevel,
-                        top    : (rect.offsetTop - cnvs.offsetTop) / zoomLevel,
-                        width  : (rect.offsetWidth) / zoomLevel,
-                        height : (rect.offsetHeight) / zoomLevel
+                        left: (rect.offsetLeft - cnvs.offsetLeft) / zoomLevel,
+                        top: (rect.offsetTop - cnvs.offsetTop) / zoomLevel,
+                        width: (rect.offsetWidth) / zoomLevel,
+                        height: (rect.offsetHeight) / zoomLevel
                     };
                 }
                 
@@ -473,7 +473,7 @@ define(function(require, exports, module) {
                 
                 //@todo
                 var doc = activeDocument;
-                doc.undoManager.add(new UndoItem(url, canvas().toDataURL(), function(url){
+                doc.undoManager.add(new UndoItem(url, canvas().toDataURL(), function(url) {
                     loadedFiles[doc.tab.path] = url;
                     loadCanvas(doc.tab);
                 }));
@@ -485,23 +485,23 @@ define(function(require, exports, module) {
                 crop.disable();
             }
             
-            plugin.on("documentLoad", function(e){
-                var doc     = e.doc;
+            plugin.on("documentLoad", function(e) {
+                var doc = e.doc;
                 var session = doc.getSession();
                 
-                doc.tab.on("setPath", function(e){
+                doc.tab.on("setPath", function(e) {
                     setPath(e.path, doc);
                 }, session);
                 
                 // Value Retrieval
-                // doc.on("getValue", function get(e){ 
+                // doc.on("getValue", function get(e) { 
                 //     return session.session
                 //         ? session.session.getValue()
                 //         : e.value;
                 // }, session);
                 
                 // Value setting
-                doc.on("setValue", function set(e){
+                doc.on("setValue", function set(e) {
                     var path = doc.tab.path;
                     
                     // The first value that is set should clear the undo stack
@@ -511,8 +511,8 @@ define(function(require, exports, module) {
                         delete loadedFiles[path];
                         
                         // @todo this will go wrong and will be fixed when keeping canvas per session
-                        setPath(path, doc, function(newValue){
-                            doc.undoManager.add(new UndoItem(lastValue, canvas().toDataURL(), function(url){
+                        setPath(path, doc, function(newValue) {
+                            doc.undoManager.add(new UndoItem(lastValue, canvas().toDataURL(), function(url) {
                                 loadedFiles[path] = url;
                                 loadCanvas(doc.tab);
                             }));
@@ -526,7 +526,7 @@ define(function(require, exports, module) {
                 }, session);
                 
                 // Changed marker
-                function setChanged(e){
+                function setChanged(e) {
                     if (e.changed || doc.meta.newfile)
                         doc.tab.className.add("changed");
                     else
@@ -535,8 +535,8 @@ define(function(require, exports, module) {
                 doc.on("changed", setChanged, session);
                 setChanged({ changed: doc.changed });
                 
-                function setTheme(e){
-                    var tab    = doc.tab;
+                function setTheme(e) {
+                    var tab = doc.tab;
                     var isDark = e.theme == "dark";
                     
                     tab.backgroundColor = BGCOLOR[e.theme];
@@ -551,10 +551,10 @@ define(function(require, exports, module) {
                 canvas().style.display = "none";
             });
             
-            plugin.on("documentActivate", function(e){
-                var doc     = e.doc;
+            plugin.on("documentActivate", function(e) {
+                var doc = e.doc;
                 var session = doc.getSession();
-                var path    = doc.tab.path;
+                var path = doc.tab.path;
                 
                 activeDocument = doc;
                 
@@ -568,9 +568,9 @@ define(function(require, exports, module) {
                 // Set Rect
                 if (session.rect) {
                     rect.style.display = "block";
-                    rect.style.left   = session.rect.left;
-                    rect.style.top    = session.rect.top;
-                    rect.style.width  = session.rect.width;
+                    rect.style.left = session.rect.left;
+                    rect.style.top = session.rect.top;
+                    rect.style.width = session.rect.width;
                     rect.style.height = session.rect.height;
                 }
                 else {
@@ -578,7 +578,7 @@ define(function(require, exports, module) {
                 }
             });
             
-            plugin.on("documentUnload", function(e){
+            plugin.on("documentUnload", function(e) {
                 delete loadedFiles[e.doc.tab.path];
             });
             
@@ -611,7 +611,7 @@ define(function(require, exports, module) {
              * 
              * Example of instantiating a new terminal:
              * 
-             *     tabManager.openFile("/test.png", true, function(err, tab){
+             *     tabManager.openFile("/test.png", true, function(err, tab) {
              *         if (err) throw err;
              * 
              *         var imgeditor = tab.editor;
