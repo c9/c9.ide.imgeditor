@@ -330,7 +330,7 @@ define(function(require, exports, module) {
                     img.crossOrigin = "Anonymous";
                 
                 if (path && !loadedFiles[idx]){
-                    tab.className.add("connecting");
+                    tab.classList.add("connecting");
                     
                     img.onload = function(){
                         cnvs.width = img.width;
@@ -347,14 +347,14 @@ define(function(require, exports, module) {
                                 "W:" + img.width + "px, H:" + img.height + "px");
                         }, 10);
                         
-                        tab.className.remove("connecting");
+                        tab.classList.remove("connecting");
                         
                         callback && callback(loadedFiles[idx]);
                     };
                     img.onerror = function(){
                         img.onerror = img.onload = null;
-                        tab.className.remove("connecting");
-                        tab.className.add("error");
+                        tab.classList.remove("connecting");
+                        tab.classList.add("error");
                         
                         img.src = options.staticPrefix + "/images/sorry.jpg";
                         
@@ -522,15 +522,15 @@ define(function(require, exports, module) {
                         setPath(path, doc);
                     }
                     
-                    // doc.tab.className.remove("loading");
+                    // doc.tab.classList.remove("loading");
                 }, session);
                 
                 // Changed marker
                 function setChanged(e) {
                     if (e.changed || doc.meta.newfile)
-                        doc.tab.className.add("changed");
+                        doc.tab.classList.add("changed");
                     else
-                        doc.tab.className.remove("changed");
+                        doc.tab.classList.remove("changed");
                 }
                 doc.on("changed", setChanged, session);
                 setChanged({ changed: doc.changed });
@@ -541,8 +541,8 @@ define(function(require, exports, module) {
                     
                     tab.backgroundColor = BGCOLOR[e.theme];
                     
-                    if (isDark) tab.className.add("dark");
-                    else tab.className.remove("dark");
+                    if (isDark) tab.classList.add("dark");
+                    else tab.classList.remove("dark");
                 }
                 
                 layout.on("themeChange", setTheme, doc);
