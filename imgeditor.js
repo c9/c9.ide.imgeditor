@@ -174,13 +174,16 @@ define(function(require, exports, module) {
                 });
                 
                 // Zoom
-                zoom.on("afterchange", function(){
+                zoom.on("afterchange", function(e){
                     ui.setStyleRule(".imgeditor canvas", 
                         apf.CSSPREFIX2 + "-transform", 
                         "scale(" + (zoom.value / 100) + ")");
                     
                     var session = activeDocument.getSession();
                     session.zoom = zoom.value;
+                    
+                    if (e.value) // User Change
+                        settings.set("user/imgeditor/@zoom", zoom.value);
                     
                     clearRect();
                 });
@@ -549,6 +552,8 @@ define(function(require, exports, module) {
                 setTheme({ theme: settings.get("user/general/@skin") || "dark" });
                 
                 canvas().style.display = "none";
+                
+                session.zoom = settings.getNumber("user/imgeditor/@zoom") || 100;
             });
             
             plugin.on("documentActivate", function(e) {
