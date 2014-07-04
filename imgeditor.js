@@ -62,7 +62,12 @@ define(function(require, exports, module) {
         function ImageEditor(){
             var plugin = new Editor("Ajax.org", main.consumes, extensions);
             
-            var BGCOLOR = { light: "#D3D3D3", dark: "#3D3D3D" };
+            var BGCOLOR = { 
+                "light": "#D3D3D3", 
+                "light-gray": "#D3D3D3",
+                "dark": "#3D3D3D",
+                "dark-gray": "#3D3D3D" 
+            };
             var img, canvas, activeDocument, rect, crop, zoom, info, rectinfo;
             var editor;
             
