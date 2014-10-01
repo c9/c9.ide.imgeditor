@@ -21,7 +21,6 @@ define(function(require, exports, module) {
         var event = require("ace/lib/event");
         var Pixastic = require("./lib_pixastic");
         
-        var counter = 0;
         var loadedFiles = {};
         
         /***** Initialization *****/
@@ -640,7 +639,7 @@ define(function(require, exports, module) {
                 autoload: false
             });
             
-            plugin.load("imgeditor" + counter++);
+            plugin.load(null, "imgeditor");
             
             return plugin;
         }
