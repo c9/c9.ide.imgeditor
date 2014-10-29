@@ -62,6 +62,7 @@ define(function(require, exports, module) {
             var plugin = new Editor("Ajax.org", main.consumes, extensions);
             
             var BGCOLOR = { 
+                "flat-light": "#D3D3D3", 
                 "light": "#D3D3D3", 
                 "light-gray": "#D3D3D3",
                 "dark": "#3D3D3D",
