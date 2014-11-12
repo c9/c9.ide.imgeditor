@@ -1,5 +1,5 @@
 .imgtoolbar{
-    padding-top:3px;
+    padding-top:@imgeditor-toolbar-padding-top;
     border-bottom: 1px solid @imgeditor-toolbar-border-color;
     box-shadow: @imgeditor-toolbar-shadow;
     box-sizing: border-box;
@@ -9,6 +9,23 @@
 
 .imgtoolbar .label{
     color: @imgeditor-toolbar-label-color;
+    padding: @imgeditor-toolbar-label-padding;
+}
+
+.imgtoolbar .c9-divider{
+    margin: @imgeditor-toolbar-divider-margin !important;
+}
+
+.imgtoolbar .black_dropdown{
+    min-height: @imgeditor-dropdown-height !important;
+    max-height: @imgeditor-dropdown-height !important;
+}
+.imgtoolbar .black_dropdown .lbl{
+    padding: @imgeditor-dropdown-label-padding;
+    margin-right: @imgeditor-dropdown-button-width;
+}
+.imgtoolbar .black_dropdown .button{
+    width: @imgeditor-dropdown-button-width;
 }
 
 .imgeditor{
@@ -43,4 +60,28 @@
     background : rgba(255,255,255,0.2);
     position : absolute;
     z-index : 100000;
+}
+
+.menu-resize{
+    width: @imgeditor-resize-width;
+    height: @imgeditor-resize-height;
+    padding: @imgeditor-resize-padding;
+}
+.menu-resize-row-height{
+    height: @imgeditor-resize-row-height;
+    white-space: nowrap;
+    margin: 0 0 10px 0;
+}
+.menu-resize-row-height.center{
+    text-align: center;
+}
+.menu-resize-row-height > *{
+    display: inline-block;
+    vertical-align: middle;
+}
+.menu-resize .resize-label{
+    width: 70px;
+}
+.menu-resize .menu_divider{
+    margin: 20px 0 20px 0 !important;
 }

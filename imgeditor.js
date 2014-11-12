@@ -62,7 +62,7 @@ define(function(require, exports, module) {
             var plugin = new Editor("Ajax.org", main.consumes, extensions);
             
             var BGCOLOR = { 
-                "flat-light": "#D3D3D3", 
+                "flat-light": "#f1f1f1", 
                 "light": "#D3D3D3", 
                 "light-gray": "#D3D3D3",
                 "dark": "#3D3D3D",
@@ -100,63 +100,23 @@ define(function(require, exports, module) {
                 }
                 
                 // Resize
-                var mnuResize = new ui.menu({ 
-                    width: 155, 
-                    height: 130, 
-                    style: "padding:10px 10px 0 10px",
-                    childNodes: [
-                        new ui.hsplitbox({
-                            height: 27,
-                            childNodes: [
-                                new ui.label({ width: 50, caption: "Width:" }),
-                                new ui.spinner({ width: 50, min: 0, max: 10000, id: "width" })
-                            ]
-                        }),
-                        new ui.hsplitbox({
-                            height: 27,
-                            childNodes: [
-                                new ui.label({ width: 50, caption: "Height:" }),
-                                new ui.spinner({ width: 50, min: 0, max: 10000, id: "height"  })
-                            ]
-                        }),
-                        new ui.hsplitbox({
-                            height: 27,
-                            childNodes: [
-                                new ui.checkbox({
-                                    value: true,
-                                    label: "Maintain Aspect Ratio",
-                                    skin: "checkbox_black",
-                                    id: "aspectratio"
-                                })
-                            ]
-                        }),
-                        new ui.hsplitbox({
-                            height: 27,
-                            childNodes: [
-                                new ui.button({
-                                    skin: "btn-default-css3",
-                                    margin: "2 10 0 10",
-                                    caption: "Resize",
-                                    "default" : "1",
-                                    onclick: function(){
-                                        if (tbHeight.getValue() > 1 && tbWidth.getValue() > 1) {
-                                            exec("resize", {
-                                                width: tbWidth.getValue(),
-                                                height: tbHeight.getValue()
-                                            });
-                                        }
-                                    }
-                                })
-                            ]
-                        })
-                    ]
-                });
+                var mnuResize = plugin.getElement("resize-menu");
                 btn1.setAttribute("submenu", mnuResize);
                 plugin.addElement(mnuResize);
                 
                 var tbWidth = plugin.getElement("width");
                 var tbHeight = plugin.getElement("height");
                 var cbAspect = plugin.getElement("aspectratio");
+                var btnResize = plugin.getElement("resize-button");
+                
+                btnResize.addEventListener("click", function(){
+                    if (tbHeight.getValue() > 1 && tbWidth.getValue() > 1) {
+                        exec("resize", {
+                            width: tbWidth.getValue(),
+                            height: tbHeight.getValue()
+                        });
+                    }
+                });
                 
                 tbWidth.on("blur", function(){
                     if (cbAspect.checked) {

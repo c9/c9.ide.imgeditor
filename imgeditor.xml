@@ -36,4 +36,23 @@
             <canvas></canvas>
         </a:bar>
     </a:vsplitbox>
+    
+    <a:menu id="resize-menu" class="menu-resize">
+        <div class="menu-resize-row-height">
+            <a:label class="resize-label">Width:</a:label>
+            <a:spinner min="0" max="10000" id="width" />
+        </div>
+        <div class="menu-resize-row-height">
+            <a:label class="resize-label">Height:</a:label>
+            <a:spinner min="0" max="10000" id="height" />
+        </div>
+        <a:divider />
+        <div class="menu-resize-row-height">
+            <a:checkbox value="true" label="Maintain Aspect Ratio" skin="checkbox_black" id="aspectratio" />
+        </div>
+        <a:divider />
+        <div class="menu-resize-row-height center">
+            <a:button skin="btn-default-css3" margin="2 10 0 10" style="width:50%" caption="Resize" default="1" id="resize-button" />
+        </div>
+    </a:menu>
 </a:application>
