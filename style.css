@@ -70,7 +70,7 @@
 .menu-resize-row-height{
     height: @imgeditor-resize-row-height;
     white-space: nowrap;
-    margin: 0 0 10px 0;
+    margin: 0 0 @imgeditor-resize-row-margin-bottom 0;
 }
 .menu-resize-row-height.center{
     text-align: center;
@@ -80,8 +80,11 @@
     vertical-align: middle;
 }
 .menu-resize .resize-label{
-    width: 70px;
+    width: @imgeditor-resize-column-width;
 }
 .menu-resize .menu_divider{
-    margin: 20px 0 20px 0 !important;
+    margin: @imgeditor-resize-divider-margin !important;
+}
+.menu-resize .menu_divider when(@imgeditor-resize-dividers = false) {
+    display: none;
 }
