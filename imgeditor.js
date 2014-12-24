@@ -514,7 +514,7 @@ define(function(require, exports, module) {
                 }
                 
                 layout.on("themeChange", setTheme, doc);
-                setTheme({ theme: settings.get("user/general/@skin") || "dark" });
+                setTheme({ theme: settings.get("user/general/@skin") });
                 
                 canvas().style.display = "none";
                 
