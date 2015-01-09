@@ -493,16 +493,6 @@ define(function(require, exports, module) {
                     // doc.tab.classList.remove("loading");
                 }, session);
                 
-                // Changed marker
-                function setChanged(e) {
-                    if (e.changed || doc.meta.newfile)
-                        doc.tab.classList.add("changed");
-                    else
-                        doc.tab.classList.remove("changed");
-                }
-                doc.on("changed", setChanged, session);
-                setChanged({ changed: doc.changed });
-                
                 function setTheme(e) {
                     var tab = doc.tab;
                     var isDark = e.theme == "dark";
