@@ -293,10 +293,13 @@ define(function(require, exports, module) {
                 var ctx = cnvs.getContext("2d");
                 var img = editor.$ext.querySelector("img");
                 if (img) {
-                    if (img.src == path)
+                    var src = img.src.replace(/\?[^?]+/, "");
+                    if (src == path)
                         return;
                     img.parentNode.removeChild(img);
                 }
+                // TODO remove this when vfs sets correct cache headers on changed images
+                path = path + "?" + Date.now();
                 img = document.createElement("img");
                 img.style.margin = "0 auto";
                 editor.$ext.appendChild(img);
