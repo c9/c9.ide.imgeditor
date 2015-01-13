@@ -179,14 +179,6 @@ define(function(require, exports, module) {
                 };
                 
                 editor.$ext.onmousedown = function(e) {
-                    var cnvs = canvas();
-                    var pos = cnvs.getBoundingClientRect();
-                    var left = e.clientX - pos.left;
-                    var top = e.clientY - pos.top;
-                    if (left < 0 || top < 0 
-                      || left > pos.width || top > pos.height)
-                        return;
-                    
                     startRect(e);
                 };
                 
