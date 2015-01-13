@@ -46,13 +46,13 @@ define(function(require, exports, module) {
         // @todo keep canvas reference on session and remove loadedFiles
         // @Todo for later - add undo stack
         function UndoItem(original, changed, apply) {
-            this.getState = function(){ }
+            this.getState = function(){ };
             this.undo = function(){ 
                 apply(original);
-            }
+            };
             this.redo = function(){ 
                 apply(changed);
-            }
+            };
         }
         // undoManager.on("itemFind", function(e) {
         //     return new Item(e.state[0], e.state[1]);
@@ -94,10 +94,9 @@ define(function(require, exports, module) {
                 editor.$ext.appendChild(rect);
                 rect.className = "imgeditorrect";
                 
-                img = editor.$ext.querySelector("img");
                 canvas = function(){
                     return editor.$ext.querySelector("canvas");
-                }
+                };
                 
                 // Resize
                 var mnuResize = plugin.getElement("resize-menu");
@@ -177,7 +176,7 @@ define(function(require, exports, module) {
                     rectinfo.setAttribute("caption", 
                         "L: " + (left / zoomLevel) + "px, "
                         + "T: " + (top / zoomLevel) + "px");
-                }
+                };
                 
                 editor.$ext.onmousedown = function(e) {
                     var cnvs = canvas();
@@ -292,6 +291,15 @@ define(function(require, exports, module) {
                 var idx = tab.path;
                 var cnvs = canvas();
                 var ctx = cnvs.getContext("2d");
+                var img = editor.$ext.querySelector("img");
+                if (img) {
+                    if (img.src == path)
+                        return;
+                    img.parentNode.removeChild(img);
+                }
+                img = document.createElement("img");
+                img.style.margin = "0 auto";
+                editor.$ext.appendChild(img);
                 
                 // Enable CORS support
                 if (c9.hosted)
@@ -300,6 +308,10 @@ define(function(require, exports, module) {
                 if (path && !loadedFiles[idx]){
                     tab.classList.add("connecting");
                     
+                    var timer = setTimeout(function() {
+                        img._cleanup();
+                        showError("Image loading timed out");
+                    }, 120 * 1000);
                     img.onload = function(){
                         cnvs.width = img.width;
                         cnvs.height = img.height;
@@ -309,24 +321,31 @@ define(function(require, exports, module) {
                         ctx.drawImage(img, 0, 0);
                         loadedFiles[idx] = cnvs.toDataURL();
                         
-                        // Timeout because width is not processed completely yet
+                        var sizeCaption = "W:" + img.width + "px, H:" + img.height + "px";
+                        // Timeout because of apf weirdness
                         setTimeout(function(){
-                            info.setAttribute("caption", 
-                                "W:" + img.width + "px, H:" + img.height + "px");
+                            info.setAttribute("caption", sizeCaption);
                         }, 10);
                         
                         tab.classList.remove("connecting");
                         
+                        img._cleanup();
+                        
                         callback && callback(loadedFiles[idx]);
                     };
                     img.onerror = function(){
-                        img.onerror = img.onload = null;
-                        tab.classList.remove("connecting");
+                        img._cleanup();
                         tab.classList.add("error");
                         
                         img.src = options.staticPrefix + "/images/sorry.jpg";
-                        
                         showError("Invalid or Unsupported Image Format");
+                    };
+                    img._cleanup = function() {
+                        clearTimeout(timer);
+                        img.onerror = img.onload = null;
+                        if (img.parentNode)
+                            img.parentNode.removeChild(img);
+                        tab.classList.remove("connecting");
                     };
 
                     img.src = path;
