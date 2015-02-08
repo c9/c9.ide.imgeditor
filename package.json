@@ -9,14 +9,12 @@
         "url": "http://github.com/c9/c9.ide.imgeditor.git"
     },
     "plugins": {
-        "plugin": {
-            "imgeditor": {}
-        }
+        "imgeditor": {}
     },
     "categories": [
         "core"
     ],
     "licenses": [
-        ""
+        "MIT"
     ]
 }
