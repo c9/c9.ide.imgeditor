@@ -307,7 +307,10 @@ define(function(require, exports, module) {
                         img._cleanup();
                         showError("Image loading timed out");
                     }, 120 * 1000);
-                    img.onload = function(){
+                    img.onload = function onLoad(e){
+                        var sizeCaption = "W:" + img.width + "px, H:" + img.height + "px";
+                        info.setAttribute("caption", sizeCaption);
+                        
                         cnvs.width = img.width;
                         cnvs.height = img.height;
                         cnvs.style.display = "inline-block";
@@ -315,12 +318,6 @@ define(function(require, exports, module) {
                         
                         ctx.drawImage(img, 0, 0);
                         loadedFiles[idx] = cnvs.toDataURL();
-                        
-                        var sizeCaption = "W:" + img.width + "px, H:" + img.height + "px";
-                        // Timeout because of apf weirdness
-                        setTimeout(function(){
-                            info.setAttribute("caption", sizeCaption);
-                        }, 10);
                         
                         tab.classList.remove("connecting");
                         
