@@ -150,16 +150,13 @@ define(function(require, exports, module) {
                     else {
                         ui.setStyleRule(".imgeditor canvas",
                             "-ms-interpolation-mode", "nearest-neighbor");
-                        ui.setStyleRule(".imgeditor canvas",
-                            "image-rendering", "-moz-crisp-edges");
-                        ui.setStyleRule(".imgeditor canvas",
-                            "image-rendering", "-o-crisp-edges");
-                        ui.setStyleRule(".imgeditor canvas",
-                            "image-rendering", "-webkit-optimize-contrast");
-                        ui.setStyleRule(".imgeditor canvas",
-                            "image-rendering", "optimize-contrast");
-                        ui.setStyleRule(".imgeditor canvas",
-                            "image-rendering", "pixelated");
+
+                        ["-moz-crisp-edges", "-o-crisp-edges", 
+                         "-webkit-optimize-contrast", "optimize-contrast",
+                         "pixelated"].map(function(prop) {
+                            ui.setStyleRule(".imgeditor canvas",
+                                "image-rendering", prop);
+                        });
                     }
 
                     var session = activeDocument.getSession();
