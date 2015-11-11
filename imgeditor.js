@@ -69,7 +69,7 @@ define(function(require, exports, module) {
                 "dark": "#3D3D3D",
                 "dark-gray": "#3D3D3D" 
             };
-            var img, canvas, activeDocument, rect, crop, zoom, info, rectinfo;
+            var img, canvas, activeDocument, rect, crop, zoom, smooth, info, rectinfo;
             var editor;
             
             plugin.on("draw", function(e) {
@@ -87,6 +87,7 @@ define(function(require, exports, module) {
                 editor = plugin.getElement("imgEditor");
                 crop = plugin.getElement("btn2");
                 zoom = plugin.getElement("zoom");
+                smooth = plugin.getElement("smooth");
                 info = plugin.getElement("info");
                 rectinfo = plugin.getElement("rectinfo");
                 
@@ -138,6 +139,37 @@ define(function(require, exports, module) {
                     tbHeight.setValue(canvas().offsetHeight);
                 });
                 
+                // smooth
+                smooth.on("afterchange", function(e) {
+                    if (smooth.checked) {
+                        ui.setStyleRule(".imgeditor canvas",
+                            "-ms-interpolation-mode", "bicubic");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "auto");
+                    }
+                    else {
+                        ui.setStyleRule(".imgeditor canvas",
+                            "-ms-interpolation-mode", "nearest-neighbor");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "-moz-crisp-edges");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "-o-crisp-edges");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "-webkit-optimize-contrast");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "optimize-contrast");
+                        ui.setStyleRule(".imgeditor canvas",
+                            "image-rendering", "pixelated");
+                    }
+
+                    var session = activeDocument.getSession();
+                    session.smooth = smooth.checked;
+
+                    settings.set("user/imgeditor/@smooth", smooth.checked);
+
+                    clearRect();
+                });
+
                 // Zoom
                 zoom.on("afterchange", function(e){
                     ui.setStyleRule(".imgeditor canvas", 
@@ -536,6 +568,8 @@ define(function(require, exports, module) {
                 // Set Toolbar
                 zoom.setValue(session.zoom || 100);
                 zoom.dispatchEvent("afterchange");
+                smooth.setValue(session.smooth);
+                smooth.dispatchEvent("afterchange");
                 
                 // Set Rect
                 if (session.rect) {
