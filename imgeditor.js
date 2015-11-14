@@ -398,11 +398,61 @@ define(function(require, exports, module) {
                 var cnvs = canvas();
                 var htmlNode = editor.$ext;
                 
-                var startX = e.clientX + htmlNode.scrollLeft;
-                var startY = e.clientY + htmlNode.scrollTop;
-                var moved;
+                var cnvsPos = cnvs.getBoundingClientRect();
+                var xMin = cnvsPos.left - pos.left + htmlNode.scrollLeft;
+                var yMin = cnvsPos.top - pos.top + htmlNode.scrollTop;
+                var xMax = xMin + cnvsPos.width;
+                var yMax = yMin + cnvsPos.height;
+                function clampX(x) { return Math.min(Math.max(xMin, x), xMax); }
+                function clampY(y) { return Math.min(Math.max(yMin, y), yMax); }
                 
-                event.capture(container, function(e) {
+                var startX = clampX(e.clientX - pos.left + htmlNode.scrollLeft);
+                var startY = clampY(e.clientY - pos.top + htmlNode.scrollTop);
+                var moved, scrolled;
+                
+                event.capture(container, function onMove(e) {
+                    var scrollLeft = htmlNode.scrollLeft;
+                    var scrollTop = htmlNode.scrollTop;
+                    var clientX = e.clientX - pos.left + scrollLeft;
+                    var clientY = e.clientY - pos.top + scrollTop;
+                    
+                    if (scrolled) {
+                        clearTimeout(scrolled);
+                        scrolled = null;
+                    }
+                    
+                    if (clientX > scrollLeft + pos.width) {
+                        scrollLeft += clientX - scrollLeft - pos.width;
+                        htmlNode.scrollLeft = scrollLeft;
+                        if (scrollLeft < htmlNode.scrollWidth)
+                            scrolled = true;
+                    } else if (clientX < scrollLeft - 5) {
+                        scrollLeft += clientX - scrollLeft;
+                        htmlNode.scrollLeft = scrollLeft;
+                        if (scrollLeft > 0)
+                            scrolled = true;
+                    }
+                    if (clientY > scrollTop + pos.height) {
+                        scrollTop += clientY - scrollTop - pos.height;
+                        htmlNode.scrollTop = scrollTop;
+                        if (scrollTop < htmlNode.scrollHeight)
+                            scrolled = true;
+                    } else if (clientY < scrollTop - 5) {
+                        scrollTop += clientY - scrollTop;
+                        htmlNode.scrollTop = scrollTop;
+                        if (scrollTop > 0)
+                            scrolled = true;
+                    }
+                    
+                    if (scrolled) {
+                        scrolled = setTimeout(function() { 
+                            if (cnvs) onMove(e);
+                        }, 20);
+                    }
+                    
+                    clientX = clampX(clientX);
+                    clientY = clampY(clientY);
+                    
                     if (!moved) {
                         if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 5) {
                             moved = true;
@@ -411,24 +461,21 @@ define(function(require, exports, module) {
                         else return;
                     }
                     
-                    var clientX = e.clientX + htmlNode.scrollLeft;
-                    var clientY = e.clientY + htmlNode.scrollTop;
-                    
                     if (startX > clientX) {
-                        rect.style.left = (clientX - pos.left) + "px";
+                        rect.style.left = clientX + "px";
                         rect.style.width = (startX - clientX) + "px";
                     }
                     else {
-                        rect.style.left = (startX - pos.left) + "px";
+                        rect.style.left = startX + "px";
                         rect.style.width = (clientX - startX) + "px";
                     }
                     
                     if (startY > clientY) {
-                        rect.style.top = (clientY - pos.top) + "px";
+                        rect.style.top = clientY + "px";
                         rect.style.height = (startY - clientY) + "px";
                     }
                     else {
-                        rect.style.top = (startY - pos.top) + "px";
+                        rect.style.top = startY + "px";
                         rect.style.height = (clientY - startY) + "px";
                     }
                     
@@ -440,7 +487,8 @@ define(function(require, exports, module) {
                         + "H: " + (rect.offsetHeight / zoomLevel) + "px");
                     
                 }, function() {
-                    if (moved) {
+                    cnvs = null;
+                    if (moved && parseInt(rect.style.width, 10) && parseInt(rect.style.height, 10)) {
                         activeDocument.getSession().rect = {
                             left: rect.style.left,
                             top: rect.style.top,
