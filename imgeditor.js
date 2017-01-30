@@ -32,7 +32,7 @@ define(function(require, exports, module) {
         var handle = editors.register("imgeditor", "Image Editor", ImageEditor, extensions);
         
         var drawn;
-        handle.draw = function(){
+        handle.draw = function() {
             if (drawn) return;
             drawn = true;
             
@@ -46,11 +46,11 @@ define(function(require, exports, module) {
         // @todo keep canvas reference on session and remove loadedFiles
         // @Todo for later - add undo stack
         function UndoItem(original, changed, apply) {
-            this.getState = function(){ };
-            this.undo = function(){ 
+            this.getState = function() { };
+            this.undo = function() { 
                 apply(original);
             };
-            this.redo = function(){ 
+            this.redo = function() { 
                 apply(changed);
             };
         }
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
         //     return new Item(e.state[0], e.state[1]);
         // });
         
-        function ImageEditor(){
+        function ImageEditor() {
             var plugin = new Editor("Ajax.org", main.consumes, extensions);
             
             var BGCOLOR = { 
@@ -96,7 +96,7 @@ define(function(require, exports, module) {
                 editor.$ext.appendChild(rect);
                 rect.className = "imgeditorrect";
                 
-                canvas = function(){
+                canvas = function() {
                     return editor.$ext.querySelector("canvas");
                 };
                 
@@ -110,7 +110,7 @@ define(function(require, exports, module) {
                 var cbAspect = plugin.getElement("aspectratio");
                 var btnResize = plugin.getElement("resize-button");
                 
-                btnResize.addEventListener("click", function(){
+                btnResize.addEventListener("click", function() {
                     if (tbHeight.getValue() > 1 && tbWidth.getValue() > 1) {
                         exec("resize", {
                             width: tbWidth.getValue(),
@@ -119,13 +119,13 @@ define(function(require, exports, module) {
                     }
                 });
                 
-                tbWidth.on("blur", function(){
+                tbWidth.on("blur", function() {
                     if (cbAspect.checked) {
                         tbHeight.setAttribute("value", Math.round(canvas().offsetHeight 
                             * (tbWidth.getValue() / canvas().offsetWidth)));
                     }
                 });
-                tbHeight.on("blur", function(){
+                tbHeight.on("blur", function() {
                     if (cbAspect.checked) {
                         tbWidth.setAttribute("value", Math.round(canvas().offsetWidth 
                             * (tbHeight.getValue() / canvas().offsetHeight)));
@@ -168,7 +168,7 @@ define(function(require, exports, module) {
                 });
 
                 // Zoom
-                zoom.on("afterchange", function(e){
+                zoom.on("afterchange", function(e) {
                     ui.setStyleRule(".imgeditor canvas", 
                         apf.CSSPREFIX2 + "-transform", 
                         "scale(" + (zoom.value / 100) + ")");
@@ -183,11 +183,11 @@ define(function(require, exports, module) {
                 });
                 
                 // resize width/height
-                crop.on("click", function(){ exec("crop") });
-                btn3.on("click", function(){ exec("rotate", { angle: -90 }); });
-                btn4.on("click", function(){ exec("rotate", { angle: 90 }); });
-                btn5.on("click", function(){ exec("fliph"); });
-                btn6.on("click", function(){ exec("flipv"); });
+                crop.on("click", function() { exec("crop"); });
+                btn3.on("click", function() { exec("rotate", { angle: -90 }); });
+                btn4.on("click", function() { exec("rotate", { angle: 90 }); });
+                btn5.on("click", function() { exec("fliph"); });
+                btn6.on("click", function() { exec("flipv"); });
                 
                 editor.$ext.onmousemove = function(e) {
                     if (rect.style.display != "none")
@@ -250,12 +250,12 @@ define(function(require, exports, module) {
                     }
                     return new Blob(
                         [new Uint8Array(array)],
-                        {type: mimeString}
+                        { type: mimeString }
                     );
                 }
                 
                 save.on("beforeSave", function(e) {
-                    if (e.document.editor.type == "imgeditor"){
+                    if (e.document.editor.type == "imgeditor") {
                         var path = e.document.tab.path;
                         
                         // Prevent unchanged files from being saved
@@ -285,7 +285,7 @@ define(function(require, exports, module) {
                 // });
         
                 if (!editor.focus)
-                    editor.focus = function(){ return false;};
+                    editor.focus = function() { return false;};
                 
                 editor.show();
             });
@@ -330,14 +330,14 @@ define(function(require, exports, module) {
                 if (c9.hosted)
                     img.crossOrigin = "Anonymous";
                 
-                if (path && !loadedFiles[idx]){
+                if (path && !loadedFiles[idx]) {
                     tab.classList.add("connecting");
                     
                     var timer = setTimeout(function() {
                         img._cleanup();
                         showError("Image loading timed out");
                     }, 120 * 1000);
-                    img.onload = function onLoad(e){
+                    img.onload = function onLoad(e) {
                         var sizeCaption = "W:" + img.width + "px, H:" + img.height + "px";
                         info.setAttribute("caption", sizeCaption);
                         
@@ -355,7 +355,7 @@ define(function(require, exports, module) {
                         
                         callback && callback(loadedFiles[idx]);
                     };
-                    img.onerror = function(){
+                    img.onerror = function() {
                         img._cleanup();
                         tab.classList.add("error");
                         
@@ -374,7 +374,7 @@ define(function(require, exports, module) {
                 }
                 else {
                     var tempImg = new Image();
-                    tempImg.onload = function(){
+                    tempImg.onload = function() {
                         cnvs.width = tempImg.width;
                         cnvs.height = tempImg.height;
                         cnvs.style.display = "inline-block";
@@ -536,7 +536,7 @@ define(function(require, exports, module) {
                 }));
             }
             
-            function clearRect(){
+            function clearRect() {
                 rect.style.display = "none";
                 delete activeDocument.getSession().rect;
                 crop.disable();
